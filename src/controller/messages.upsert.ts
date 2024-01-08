@@ -32,5 +32,7 @@ export async function messageUpserts(
     case '/carrinho':
       CartService.getCart(client, msg);
       break;
+    case '/remover':
+      CartService.deleteCart(client, msg);
   }
 }

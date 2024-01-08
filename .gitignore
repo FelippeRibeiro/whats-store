@@ -1,4 +1,3 @@
 node_modules
 auth
 /src/utils/contacts.*
-/prisma/dev.db

@@ -10,6 +10,7 @@ export class CartService {
     const [_, id, quantity] = getTextContent(message)!.split(' ');
 
     try {
+      if (!id) throw new Error('Digite o id de um item valido!');
       const cart = await this.CartRepository.createIfNotExistsOrUpdateQuantity(message.key.remoteJid!, Number(id), Number(quantity));
       await client.sendMessage(message.key.remoteJid!, {
         text: `Carrinho atualizado!\n\nCaso queria atualizar a quantidade digite: /adicionar ${id} ${cart.quantity++}`,
@@ -42,6 +43,25 @@ export class CartService {
           .map((item) => `${item.quantity} - ${item.item} - R$ ${item.value}`)
           .join('\n')}\n\nTotal: R$ ${total}`,
       });
+    }
+  }
+  static async deleteCart(client: ReturnType<typeof makeWASocket>, message: proto.IWebMessageInfo): Promise<void> {
+    const [_, id] = getTextContent(message)!.split(' ');
+    if (!id) {
+      const carts = await this.CartRepository.getCartByUserId(message.key.remoteJid!);
+      for (const cart of carts) {
+        await this.CartRepository.deleteCart(cart.id);
+        continue;
+      }
+      await client.sendMessage(message.key.remoteJid!, { text: 'Carrinho apagado!' });
+    }
+    if (id) {
+      const cart = await this.CartRepository.getCartByUserAndProduct(message.key.remoteJid!, Number(id));
+      if (cart) {
+        await this.CartRepository.deleteCart(cart.id);
+        await client.sendMessage(message.key.remoteJid!, { text: 'Item removido do carrinho!' });
+        return;
+      } else await client.sendMessage(message.key.remoteJid!, { text: 'Item não encontrado!' });
     }
   }
 }
