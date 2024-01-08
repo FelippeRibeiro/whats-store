@@ -1,6 +1,4 @@
-import { Boom } from '@hapi/boom';
 import makeWASocket, { proto } from '@whiskeysockets/baileys';
-import { ExistsResponse, RegistrationOptions } from '@whiskeysockets/baileys/lib/Socket/registration';
 import { ProductsRepository } from '../repository/products.repository';
 
 export class ListService {
@@ -25,12 +23,16 @@ export class ListService {
       await client.sendMessage(
         message.key.remoteJid!,
         {
-          caption: `Nome: *${product.title}*\n\nDescrição: *${product.description}*\n\nValor: *${product.price} R$*`,
+          caption: `Id: *${product.id}*\nNome: *${product.title}*\n\nDescrição: *${product.description}*\n\nValor: *${product.price} R$*`,
           image: product.image,
         },
         { quoted: message }
       );
       continue;
     }
+
+    await client.sendMessage(message.key.remoteJid!, {
+      text: 'Digite o id do produto e a quantidade que deseja adicionar ao carrinho: \nExemplo: ```/adicionar 1 5```',
+    });
   }
 }

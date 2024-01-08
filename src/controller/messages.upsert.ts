@@ -2,6 +2,7 @@ import makeWASocket, { MessageUpsertType, proto } from '@whiskeysockets/baileys'
 import { contacts } from '../utils/contacts';
 import { getTextContent } from '../utils/getMessagesContents';
 import { ListService } from '../services/list.service';
+import { AddService } from '../services/add.service';
 
 export async function messageUpserts(
   update: { messages: proto.IWebMessageInfo[]; type: MessageUpsertType },
@@ -23,9 +24,12 @@ export async function messageUpserts(
 
   console.log(getTextContent(msg));
 
-  switch (messageContent) {
+  switch (messageContent.split(' ')[0]) {
     case '/produtos':
       ListService.run(client, msg);
+      break;
+    case '/adicionar':
+      AddService.run(client, msg);
       break;
   }
 }
