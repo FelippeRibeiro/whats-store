@@ -23,7 +23,7 @@ export class ListService {
       await client.sendMessage(
         message.key.remoteJid!,
         {
-          caption: `Id: *${product.id}*\nNome: *${product.title}*\n\nDescrição: *${product.description}*\n\nValor: *${product.price} R$*`,
+          caption: `Id: *${product.id}*\nNome: *${product.title}*\n\nDescrição: *${product.description}*\n\nValor: *${product.price} R$*\n\nQuantidade: *${product.amount}*`,
           image: product.image,
         },
         { quoted: message }
@@ -32,7 +32,7 @@ export class ListService {
     }
 
     await client.sendMessage(message.key.remoteJid!, {
-      text: 'Digite o id do produto e a quantidade que deseja adicionar ao carrinho: \nExemplo: ```/adicionar 1 5```',
+      text: 'Digite o *id* do produto e a *quantidade* que deseja adicionar ao carrinho: \nExemplo: ```/adicionar 1 5```',
     });
   }
 }
