@@ -12,8 +12,8 @@ export class CartRepository implements ICartRepository {
     return this.DataBaseCart.create({ data: { user: userId, productId, quantity: quantity || 1 } });
   }
 
-  async getCartByUserId(userId: string): Promise<UserCart | null> {
-    return this.DataBaseCart.findUnique({ where: { id: userId } });
+  async getCartByUserId(userId: string): Promise<UserCart[]> {
+    return this.DataBaseCart.findMany({ where: { user: userId } });
   }
   async getCartByUserAndProduct(userId: string, productId: number): Promise<UserCart | null> {
     return this.DataBaseCart.findFirst({ where: { user: userId, productId } });

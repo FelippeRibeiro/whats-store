@@ -2,7 +2,7 @@ import makeWASocket, { MessageUpsertType, proto } from '@whiskeysockets/baileys'
 import { contacts } from '../utils/contacts';
 import { getTextContent } from '../utils/getMessagesContents';
 import { ListService } from '../services/list.service';
-import { AddService } from '../services/add.service';
+import { CartService } from '../services/cart.service';
 
 export async function messageUpserts(
   update: { messages: proto.IWebMessageInfo[]; type: MessageUpsertType },
@@ -20,8 +20,6 @@ export async function messageUpserts(
   const messageContent = getTextContent(msg);
   if (!messageContent || !messageContent.startsWith('/')) return;
 
-  console.log(msg.message.extendedTextMessage?.contextInfo?.quotedMessage);
-
   console.log(getTextContent(msg));
 
   switch (messageContent.split(' ')[0]) {
@@ -29,7 +27,10 @@ export async function messageUpserts(
       ListService.run(client, msg);
       break;
     case '/adicionar':
-      AddService.run(client, msg);
+      CartService.run(client, msg);
+      break;
+    case '/carrinho':
+      CartService.getCart(client, msg);
       break;
   }
 }
