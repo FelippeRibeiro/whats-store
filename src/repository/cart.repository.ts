@@ -1,6 +1,6 @@
 import DatabaseProvider from '../database';
 import { ICartRepository } from './interfaces/cart.repository.interface';
-import { UserCart } from '@prisma/client';
+import { Prisma, UserCart } from '@prisma/client';
 
 export class CartRepository implements ICartRepository {
   private DataBaseCart = DatabaseProvider().userCart;
@@ -13,18 +13,20 @@ export class CartRepository implements ICartRepository {
   }
 
   async getCartByUserId(userId: string): Promise<UserCart[]> {
-    return this.DataBaseCart.findMany({ where: { user: userId } });
+    return this.DataBaseCart.findMany({ where: { user: userId }, include: { product: true } });
   }
   async getCartByUserAndProduct(userId: string, productId: number): Promise<UserCart | null> {
     return this.DataBaseCart.findFirst({ where: { user: userId, productId } });
   }
 
   async updateQuantity(cartId: string, quantity: number): Promise<UserCart> {
+    if (!quantity) throw new Error('Adicione um valor valido para atualizar a quantidade no carrinho!');
+    if (quantity == 0) return this.deleteCart(cartId);
     return this.DataBaseCart.update({ where: { id: cartId }, data: { quantity } });
   }
 
-  async deleteCart(userId: string, productId: number): Promise<UserCart> {
-    return this.DataBaseCart.delete({ where: { id: userId, productId } });
+  async deleteCart(cartId: string): Promise<UserCart> {
+    return this.DataBaseCart.delete({ where: { id: cartId } });
   }
 
   async createIfNotExistsOrUpdateQuantity(userId: string, productId: number, quantity: number): Promise<UserCart> {
@@ -32,7 +34,7 @@ export class CartRepository implements ICartRepository {
     if (cart) {
       const product = await this.DataBaseProducts.findUnique({ where: { id: productId } });
       if (!product) {
-        await this.deleteCart(userId, productId);
+        await this.deleteCart(cart.id);
         throw new Error('O item adicionado não existe ou não esta mais disponível!');
       }
       if (product && product?.amount < quantity) throw new Error('Desculpe, a quantidade do item solicitado não esta mais disponível');
