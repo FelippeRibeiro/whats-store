@@ -20,7 +20,7 @@ export async function messageUpserts(
   const messageContent = getTextContent(msg);
   if (!messageContent || !messageContent.startsWith('/')) return;
 
-  console.log(getTextContent(msg));
+  console.log(messageContent);
 
   switch (messageContent.split(' ')[0]) {
     case '/produtos':
