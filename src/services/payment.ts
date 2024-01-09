@@ -1,5 +1,4 @@
 import { MercadoPagoConfig, Payment } from 'mercadopago';
-import { CreatePaymentPayload } from 'mercadopago/models/payment/create-payload.model';
 import 'dotenv/config';
 
 export class PaymentService extends MercadoPagoConfig {
@@ -8,13 +7,22 @@ export class PaymentService extends MercadoPagoConfig {
     super({ accessToken: process.env.MERCADOPAGO_ACESSTOKEN as string });
   }
 
-  public async createPayment(total: number, description: string) {
-    this.paymentClient.create({
+  public async createPayment(total: number, description: string, email: string) {
+    const paymentData = await this.paymentClient.create({
       body: {
         description,
         transaction_amount: total,
         payment_method_id: 'pix',
+        payer: {
+          email,
+        },
       },
     });
+
+    return {
+      qrcode: paymentData.point_of_interaction?.transaction_data?.qr_code_base64,
+      code: paymentData.point_of_interaction?.transaction_data?.qr_code,
+      id: paymentData.id,
+    };
   }
 }

@@ -34,5 +34,8 @@ export async function messageUpserts(
       break;
     case '/remover':
       CartService.deleteCart(client, msg);
+      break;
+    case '/finalizar':
+      break;
   }
 }
