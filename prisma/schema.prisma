@@ -28,4 +28,26 @@ model UserCart {
 
   product   Products @relation(fields: [productId], references: [id])
   productId Int
+  Order     Order?   @relation(fields: [orderId], references: [id])
+  orderId   String?
+}
+
+model Order {
+  id        String     @id @default(uuid())
+  items     UserCart[]
+  total     Float
+  userId    String
+  createdAt DateTime   @default(now())
+  paidAt    DateTime   @default(now())
+  Invoice   Invoice[]
+}
+
+model Invoice {
+  id                String @id @default(uuid())
+  order             Order  @relation(fields: [orderId], references: [id])
+  orderId           String
+  total             Float
+  externalReference String
+  mercadoPagoId     String
+  status            String @default("pending")
 }
