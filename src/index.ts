@@ -1,6 +1,7 @@
 import makeWASocket, { DisconnectReason, useMultiFileAuthState, Browsers, proto } from '@whiskeysockets/baileys';
 import { Boom } from '@hapi/boom';
 import { messageUpserts } from './controller/messages.upsert';
+import pino from 'pino';
 
 let client: ReturnType<typeof makeWASocket>;
 async function connectToWhatsApp() {
@@ -10,6 +11,7 @@ async function connectToWhatsApp() {
     printQRInTerminal: true,
     browser: Browsers.appropriate('Chrome'),
     auth: state,
+    logger: pino({ level: 'silent' }) as any,
   });
 
   client.ev.on('connection.update', (update) => {
