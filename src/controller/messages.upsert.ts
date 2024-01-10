@@ -3,6 +3,7 @@ import { contacts } from '../utils/contacts';
 import { getTextContent } from '../utils/getMessagesContents';
 import { ListService } from '../services/list.service';
 import { CartService } from '../services/cart.service';
+import { OrderService } from '../services/orders.service';
 
 export async function messageUpserts(
   update: { messages: proto.IWebMessageInfo[]; type: MessageUpsertType },
@@ -36,6 +37,7 @@ export async function messageUpserts(
       CartService.deleteCart(client, msg);
       break;
     case '/finalizar':
+      OrderService.run(client, msg);
       break;
   }
 }
