@@ -12,7 +12,7 @@ export class CartRepository implements ICartRepository {
     return this.DataBaseCart.create({ data: { user: userId, productId, quantity: quantity || 1 } });
   }
 
-  async getCartByUserId(userId: string): Promise<UserCart[]> {
+  async getCartByUserId(userId: string) {
     return this.DataBaseCart.findMany({ where: { user: userId }, include: { product: true } });
   }
   async getCartByUserAndProduct(userId: string, productId: number): Promise<UserCart | null> {
