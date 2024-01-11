@@ -33,6 +33,7 @@ export class CartService {
           item: products.find((product) => product.id === item.productId)?.title,
           quantity: item.quantity,
           value: item.quantity * (products.find((product) => product.id === item.productId)?.price || 0),
+          productPrice: item.product.price,
         };
       });
 
@@ -40,7 +41,7 @@ export class CartService {
 
       await client.sendMessage(message.key.remoteJid!, {
         text: `Produtos no carrinho: \n\n${resume
-          .map((item) => `${item.quantity} - ${item.item} - R$ ${item.value}`)
+          .map((item) => `${item.quantity} - ${item.item} - R$ ${item.productPrice}`)
           .join('\n')}\n\nTotal: R$ ${total}`,
       });
     }
