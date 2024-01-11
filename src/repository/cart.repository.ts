@@ -20,7 +20,7 @@ export class CartRepository implements ICartRepository {
   }
 
   async updateQuantity(cartId: string, quantity: number): Promise<UserCart> {
-    if (!quantity) throw new Error('Adicione um valor valido para atualizar a quantidade no carrinho!');
+    if (quantity && quantity < 0) throw new Error('Adicione um valor valido para atualizar a quantidade no carrinho!');
     if (quantity == 0) return this.deleteCart(cartId);
     return this.DataBaseCart.update({ where: { id: cartId }, data: { quantity } });
   }
