@@ -23,9 +23,19 @@ export class OrderService {
       }
     }
 
-    //Verificar se os produtos ainda estão disponiveis
+    if (removedItems.length) {
+      await reply(
+        `Os itens a seguir foram removidos do seu carrinho:\n\n${removedItems.map(
+          (item) => `- *${item}*\n`
+        )}\nVerifique a disponibilidade e quantidade novamente!`,
+        message,
+        client
+      );
+      return;
+    }
 
-    //Calcular o valor total
+    const total = cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+
     //Criar ordem e salvar no banco
     //Criar sessão e coletor
     //Coletar o email
