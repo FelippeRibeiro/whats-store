@@ -38,7 +38,7 @@ model Order {
   total     Float
   userId    String
   createdAt DateTime   @default(now())
-  paidAt    DateTime   @default(now())
+  paidAt    DateTime?
   Invoice   Invoice[]
 }
 
