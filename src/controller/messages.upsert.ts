@@ -4,6 +4,7 @@ import { getTextContent } from '../utils/getMessagesContents';
 import { ListService } from '../services/list.service';
 import { CartService } from '../services/cart.service';
 import { OrderService } from '../services/orders.service';
+import { handleSessions } from '../utils/sessions/sessions';
 
 export async function messageUpserts(
   update: { messages: proto.IWebMessageInfo[]; type: MessageUpsertType },
@@ -19,6 +20,8 @@ export async function messageUpserts(
   if (msg.key.remoteJid !== contacts.ownerJid) return;
 
   const messageContent = getTextContent(msg);
+
+  if (messageContent) await handleSessions(client, msg);
   if (!messageContent || !messageContent.startsWith('/')) return;
 
   console.log(messageContent);

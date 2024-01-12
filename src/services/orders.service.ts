@@ -1,7 +1,9 @@
 import makeWASocket, { proto } from '@whiskeysockets/baileys';
 import { CartRepository } from '../repository/cart.repository';
-import { reply } from '../utils/reply';
+import { reply } from '../index';
 import { ProductsRepository } from '../repository/products.repository';
+import { sessions } from '../utils/sessions/sessions';
+import { OrderSession } from '../utils/sessions/OrderSession';
 
 export class OrderService {
   private static CartRepository = new CartRepository();
@@ -11,7 +13,7 @@ export class OrderService {
     const cart = await this.CartRepository.getCartByUserId(message.key.remoteJid!);
 
     if (!cart.length) {
-      await reply('Seu carrinho está vazio', message, client);
+      await reply('Seu carrinho está vazio', message);
       return;
     }
 
@@ -28,13 +30,20 @@ export class OrderService {
         `Os itens a seguir foram removidos do seu carrinho:\n\n${removedItems.map(
           (item) => `- *${item}*\n`
         )}\nVerifique a disponibilidade e quantidade novamente!`,
-        message,
-        client
+        message
       );
       return;
     }
 
     const total = cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+
+    await client.sendMessage(message.key.remoteJid!, {
+      text: `Seu pedido:\n${cart.map(
+        (itemCart) => `- ${itemCart.product.title} ${itemCart.quantity} R$ ${itemCart.product.price}\n`
+      )}\nValor total: ${total}\n\nPara confirmar e seguir para o pagamento digite seu *email*\nPara cancelar envie *cancelar* a qualquer momento!`,
+    });
+
+    sessions.set(message.key.remoteJid!, { lastChoice: [], subMenu: new OrderSession(), time: new Date().toString() });
 
     //Criar ordem e salvar no banco
     //Criar sessão e coletor
