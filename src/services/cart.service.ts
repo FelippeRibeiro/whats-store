@@ -37,7 +37,7 @@ export class CartService {
         };
       });
 
-      const total = resume.reduce((acc, item) => acc + item.value, 0);
+      const total = Number(resume.reduce((acc, item) => acc + item.value, 0).toFixed(2));
 
       await client.sendMessage(message.key.remoteJid!, {
         text: `Produtos no carrinho: \n\n${resume

@@ -13,7 +13,7 @@ export class OrderService {
     const cart = await this.CartRepository.getCartByUserId(message.key.remoteJid!);
 
     if (!cart.length) {
-      await reply('Seu carrinho está vazio', message);
+      await reply({ text: 'Seu carrinho está vazio' }, message);
       return;
     }
 
@@ -27,23 +27,29 @@ export class OrderService {
 
     if (removedItems.length) {
       await reply(
-        `Os itens a seguir foram removidos do seu carrinho:\n\n${removedItems.map(
-          (item) => `- *${item}*\n`
-        )}\nVerifique a disponibilidade e quantidade novamente!`,
+        {
+          text: `Os itens a seguir foram removidos do seu carrinho:\n\n${removedItems.map(
+            (item) => `- *${item}*\n`
+          )}\nVerifique a disponibilidade e quantidade novamente!`,
+        },
         message
       );
       return;
     }
 
-    const total = cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+    const total = Number(cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0).toFixed(2));
 
     await client.sendMessage(message.key.remoteJid!, {
-      text: `Seu pedido:\n${cart.map(
-        (itemCart) => `- ${itemCart.product.title} ${itemCart.quantity} R$ ${itemCart.product.price}\n`
-      )}\nValor total: ${total}\n\nPara confirmar e seguir para o pagamento digite seu *email*\nPara cancelar envie *cancelar* a qualquer momento!`,
+      text: `Seu pedido:${cart.map(
+        (itemCart) => `\n- ${itemCart.product.title} ${itemCart.quantity} R$ ${itemCart.product.price}`
+      )}\n\nValor total: ${total}\n\nPara confirmar e seguir para o pagamento digite seu *email*\nPara cancelar envie *cancelar* a qualquer momento!`,
     });
 
-    sessions.set(message.key.remoteJid!, { lastChoice: [], subMenu: new OrderSession(), time: new Date().toString() });
+    sessions.set(message.key.remoteJid!, {
+      lastChoice: [],
+      subMenu: new OrderSession(Number(total.toFixed(2)), message.key.remoteJid!),
+      time: new Date().toString(),
+    });
 
     //Criar ordem e salvar no banco
     //Criar sessão e coletor
