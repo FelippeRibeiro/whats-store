@@ -1,4 +1,4 @@
-import makeWASocket, { DisconnectReason, useMultiFileAuthState, Browsers, proto } from '@whiskeysockets/baileys';
+import makeWASocket, { DisconnectReason, useMultiFileAuthState, Browsers, proto, AnyMessageContent } from '@whiskeysockets/baileys';
 import { Boom } from '@hapi/boom';
 import { messageUpserts } from './controller/messages.upsert';
 import pino from 'pino';
@@ -36,6 +36,7 @@ async function connectToWhatsApp() {
   return client;
 }
 
-export const reply = async (text: string, msg: proto.IWebMessageInfo) => await client.sendMessage(msg.key.remoteJid!, { text }, { quoted: msg });
+export const reply = async (content: AnyMessageContent, msg: proto.IWebMessageInfo) =>
+  await client.sendMessage(msg.key.remoteJid!, content, { quoted: msg });
 
 connectToWhatsApp();
