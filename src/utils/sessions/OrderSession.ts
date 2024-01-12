@@ -4,6 +4,7 @@ import { getTextContent } from '../getMessagesContents';
 import { reply } from '../..';
 import { PaymentService } from '../../services/payment';
 import { sessions } from './sessions';
+import { CartRepository } from '../../repository/cart.repository';
 
 export class OrderSession extends SubMenus {
   datas: { email: string; total: number; user: string };
@@ -33,6 +34,7 @@ export class OrderSession extends SubMenus {
         await reply({ text: `Seu pedido foi gerado!\nValor total R$ ${this.datas.total}\nSegue codigo copia e cola` }, msg);
         const qrcode = await reply({ image: Buffer.from(payment.qrcode, 'base64') }, msg);
         await reply({ text: payment.code }, qrcode!);
+        new CartRepository().deleteUserCart(this.datas.user);
         break;
     }
   }
