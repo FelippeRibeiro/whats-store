@@ -18,10 +18,13 @@ export class PaymentService extends MercadoPagoConfig {
         },
       },
     });
+    const qrcode = paymentData.point_of_interaction?.transaction_data?.qr_code_base64;
+    const code = paymentData.point_of_interaction?.transaction_data?.qr_code;
+    if (!qrcode || !code) throw new Error('Ocorreu um erro ao gerar o pedido!');
 
     return {
-      qrcode: paymentData.point_of_interaction?.transaction_data?.qr_code_base64,
-      code: paymentData.point_of_interaction?.transaction_data?.qr_code,
+      qrcode,
+      code,
       id: paymentData.id,
     };
   }
