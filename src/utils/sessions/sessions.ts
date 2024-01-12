@@ -13,7 +13,7 @@ export async function handleSessions(client: ReturnType<typeof makeWASocket>, me
 
   if (session && messageText === 'cancelar') {
     sessions.delete(message.key.remoteJid!);
-    await reply('Sessão finalizada!', message);
+    await reply({ text: 'Sessão finalizada!' }, message);
     return;
   }
 
