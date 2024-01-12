@@ -35,4 +35,7 @@ async function connectToWhatsApp() {
   client.ev.on('creds.update', saveCreds);
   return client;
 }
+
+export const reply = async (text: string, msg: proto.IWebMessageInfo) => await client.sendMessage(msg.key.remoteJid!, { text }, { quoted: msg });
+
 connectToWhatsApp();
