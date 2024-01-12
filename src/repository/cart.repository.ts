@@ -29,6 +29,10 @@ export class CartRepository implements ICartRepository {
     return this.DataBaseCart.delete({ where: { id: cartId } });
   }
 
+  async deleteUserCart(userId: string): Promise<any> {
+    return this.DataBaseCart.deleteMany({ where: { user: userId } });
+  }
+
   async createIfNotExistsOrUpdateQuantity(userId: string, productId: number, quantity: number): Promise<UserCart> {
     const cart = await this.getCartByUserAndProduct(userId, productId);
     if (cart) {
