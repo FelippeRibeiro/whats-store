@@ -11,13 +11,14 @@ datasource db {
 }
 
 model Products {
-  id          Int        @id @default(autoincrement())
+  id          Int          @id @default(autoincrement())
   title       String
   description String
   price       Float
   amount      Int
   image       Bytes
   UserCart    UserCart[]
+  OrderItems  OrderItems[]
 }
 
 model UserCart {
@@ -28,18 +29,28 @@ model UserCart {
 
   product   Products @relation(fields: [productId], references: [id])
   productId Int
-  Order     Order?   @relation(fields: [orderId], references: [id])
-  orderId   String?
 }
 
 model Order {
-  id        String     @id @default(uuid())
-  items     UserCart[]
-  total     Float
-  userId    String
-  createdAt DateTime   @default(now())
-  paidAt    DateTime?
-  Invoice   Invoice[]
+  id String @id @default(uuid())
+
+  total      Float
+  userId     String
+  userEmail  String
+  createdAt  DateTime     @default(now())
+  paidAt     DateTime?
+  Invoice    Invoice[]
+  OrderItems OrderItems[]
+}
+
+model OrderItems {
+  id        String   @id @default(uuid())
+  order     Order    @relation(fields: [orderId], references: [id])
+  product   Products @relation(fields: [productId], references: [id])
+  quantity  Int
+  createdAt DateTime @default(now())
+  orderId   String
+  productId Int
 }
 
 model Invoice {
