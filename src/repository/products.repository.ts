@@ -1,4 +1,4 @@
-import { IProductsRepository } from './interfaces/procutcs.repository.interface';
+import { IProductsRepository } from './interfaces/products.repository.interface';
 import { Products } from '@prisma/client';
 import DatabaseProvider from '../database';
 

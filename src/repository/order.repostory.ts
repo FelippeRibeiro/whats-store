@@ -7,8 +7,8 @@ import { IOrderderRepository } from './interfaces/order.repository.interface';
 export class OrderRepository implements IOrderderRepository {
   private databaseOrder = DatabaseProvider().order;
   private databaseOrderItems = DatabaseProvider().orderItems;
-  private cartRepository = new CartRepository();
   private databaseInvoice = DatabaseProvider().invoice;
+  private cartRepository = new CartRepository();
   async create(user: string, userEmail: string, total: number, userCart: UserCart[]): Promise<any> {
     const order = await this.databaseOrder.create({ data: { total, userEmail, userId: user } });
 
