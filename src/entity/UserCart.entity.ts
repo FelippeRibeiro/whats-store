@@ -5,7 +5,7 @@ export interface UserCart {
   user: string;
   quantity: number;
   addedAt: Date;
-
-  product: Product;
+  // product: Product;
+  product: Omit<Product, 'UserCart' | 'OrderItems'>;
   productId: number;
 }

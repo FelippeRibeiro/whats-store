@@ -47,7 +47,7 @@ export class OrderService {
 
     sessions.set(message.key.remoteJid!, {
       lastChoice: [],
-      subMenu: new OrderSession(Number(total.toFixed(2)), message.key.remoteJid!),
+      subMenu: new OrderSession(Number(total.toFixed(2)), message.key.remoteJid!, userCart),
       time: new Date().toString(),
     });
 

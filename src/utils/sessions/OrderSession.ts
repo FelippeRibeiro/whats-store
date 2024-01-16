@@ -5,14 +5,15 @@ import { reply } from '../..';
 import { PaymentService } from '../../services/payment';
 import { sessions } from './sessions';
 import { CartRepository } from '../../repository/cart.repository';
+import { UserCart } from '../../entity/UserCart.entity';
 
 export class OrderSession extends SubMenus {
-  datas: { email: string; total: number; user: string };
+  datas: { email: string; total: number; user: string; userCart: UserCart[] };
   response = true;
 
-  constructor(total: number, user: string) {
+  constructor(total: number, user: string, userCart: UserCart[]) {
     super();
-    this.datas = { email: '', total, user };
+    this.datas = { email: '', total, user, userCart };
   }
 
   async continue(msg: proto.IWebMessageInfo): Promise<void> {
