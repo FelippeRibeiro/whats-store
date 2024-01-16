@@ -11,4 +11,7 @@ export class ProductsRepository implements IProductsRepository {
   async getAvaliableProducts(): Promise<Products[]> {
     return this.databaseProducts.findMany({ where: { amount: { gt: 0 } } });
   }
+  async decrementAmount(productId: number, quantity: number): Promise<any> {
+    return this.databaseProducts.update({ data: { amount: { decrement: quantity } }, where: { id: productId } });
+  }
 }
