@@ -1,5 +1,13 @@
-//TODO Create a dynamic function to validate disponibilty of items in stock
+A simple whatsapp store to sell products and receive payments
 
-//TODO Remove some vices
+- [ ] Create default messages
 
-//TODO Create some person erros
+- [ ] Create a dynamic function to validate disponibilty of items in stock
+
+- [ ] Remove some vices
+
+- [ ] Create some personalized erros
+
+- [ ] Create api webhook
+
+...
