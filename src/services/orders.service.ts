@@ -10,15 +10,15 @@ export class OrderService {
   private static ProductsRepository = new ProductsRepository();
 
   static async run(client: ReturnType<typeof makeWASocket>, message: proto.IWebMessageInfo): Promise<void> {
-    const cart = await this.CartRepository.getCartByUserId(message.key.remoteJid!);
+    const userCart = await this.CartRepository.getCartByUserId(message.key.remoteJid!);
 
-    if (!cart.length) {
+    if (!userCart.length) {
       await reply({ text: 'Seu carrinho está vazio' }, message);
       return;
     }
 
     const removedItems = [];
-    for (const cartItem of cart) {
+    for (const cartItem of userCart) {
       if (cartItem.product.amount < cartItem.quantity) {
         await this.CartRepository.updateQuantity(cartItem.id, 0);
         removedItems.push(cartItem.product.title);
@@ -37,10 +37,10 @@ export class OrderService {
       return;
     }
 
-    const total = Number(cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0).toFixed(2));
+    const total = Number(userCart.reduce((acc, item) => acc + item.product.price * item.quantity, 0).toFixed(2));
 
     await client.sendMessage(message.key.remoteJid!, {
-      text: `Seu pedido:${cart.map(
+      text: `Seu pedido:${userCart.map(
         (itemCart) => `\n- ${itemCart.product.title} ${itemCart.quantity} R$ ${itemCart.product.price}`
       )}\n\nValor total: ${total}\n\nPara confirmar e seguir para o pagamento digite seu *email*\nPara cancelar envie *cancelar* a qualquer momento!`,
     });
